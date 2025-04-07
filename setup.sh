@@ -28,10 +28,6 @@ read -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" IP
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
 
-# Mongo connection string
-MONGO_URL="mongodb://${USERNAME}:${PASSWORD}@${IP}:27017/?authSource=admin"
-echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
-
 # Check mongodb is installed
 isMongoDB=0
 function managedMongoDBSetup (){
@@ -55,7 +51,7 @@ function managedMongoDBSetup (){
         sudo apt-get install -y mongodb-org
 
         # Step 5: Start MongoDB Service
-        sudo systemctl start mongod
+        # sudo systemctl start mongod
 
         # Step 6: Enable MongoDB Service on Boot
         sudo systemctl enable mongod
@@ -150,7 +146,11 @@ managedMongoDBSetup
 
 # Optionally open Mongo port via ufw (uncomment if you want it open publicly)
 sudo ufw allow 27017
-sudo systemctl restart mongod
+sudo systemctl enable mongod
+
+# Mongo connection string
+MONGO_URL="mongodb://${USERNAME}:${PASSWORD}@${IP}:27017/?authSource=admin"
+echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
 endTime=$(date +%s)
 runtime=$((endTime - startTime))
