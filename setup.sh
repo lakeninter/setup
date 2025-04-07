@@ -17,7 +17,7 @@ function greetFunc(){
     clear
     echo -e "${BLUE}************************************${NC}"
     echo -e "${BLUE}*                                  *${NC}"
-    echo -e "${GREEN}* ${BOLD}Welcome To Crazt Tech Solution🔥 *${NC}"
+    echo -e "${GREEN}* ${BOLD}Welcome To Crazy Tech Solution🔥 *${NC}"
     echo -e "${BLUE}*                                  *${NC}"
     echo -e "${BLUE}************************************${NC}"
 
