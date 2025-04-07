@@ -29,6 +29,20 @@ read -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" IP
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
 
-
+# Mongo connection string
 MONGO_URL="\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin${NC}\n"
 echo -e $MONGO_URL
+
+# Check mongodb is installed
+isMongoDB=0
+function checkMongoDBExists (){
+    if command -v mongod >/dev/null 2>&1; then
+        echo -e "${BLUE}\nMongoDB is already installed\n${NC}"
+        isMongoDB=1
+    else 
+        echo -e "${RED}\nMongoDB installing will start soon\n${NC}"
+        isMongoDB=0
+    fi
+}
+
+checkMongoDBExists
