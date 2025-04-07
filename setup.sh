@@ -30,8 +30,8 @@ read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
 
 # Mongo connection string
-MONGO_URL="\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin${NC}\n"
-echo -e $MONGO_URL
+MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
+echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin${NC}\n"
 
 # Check mongodb is installed
 isMongoDB=0
@@ -44,5 +44,23 @@ function checkMongoDBExists (){
         isMongoDB=0
     fi
 }
-
 checkMongoDBExists
+
+# Installing packages
+# sudo apt update && sudo apt upgrade -y
+# curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+# sudo apt install -y curl nodejs
+
+# Inserting sample data in DB
+mongosh "$MONGO_URL" <<EOF
+use sampleDB
+db.sampleDB.insertMany([
+    { name: "John", age: 30 },
+    { name: "Jane", age: 25 },
+  { name: "Bob", age: 40 }
+])
+exit
+EOF
+
+# mongosh "mongodb://adminUser:strongPassword@38.99.82.133:27017/?authSource=admin"
+
