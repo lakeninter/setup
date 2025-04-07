@@ -37,7 +37,7 @@ echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}mongodb://$USERNAME:$PASSW
 isMongoDB=0
 function managedMongoDBSetup (){
     if command -v mongod >/dev/null 2>&1; then
-        echo -e "${BLUE}\nMongoDB is already installed\n${NC}"
+        echo -e "${BLUE}\nMongoDB is already installed, skipping.\n${NC}"
         isMongoDB=1
     else
         # Step 1: Import MongoDB GPG Key
@@ -79,14 +79,14 @@ function managedMongoDBSetup (){
         sudo systemctl restart mongod
 
         # Step 10: Inserting sample data in DB
-#         mongosh <<EOF
-#             use admin
-#             db.createUser({
-#                 user: "adminUser",
-#                 pwd: "strongPassword",
-#                 roles: [ { role: "root", db: "admin" } ]
-#             })
-# EOF
+        mongosh <<EOF
+            use admin
+            db.createUser({
+                user: "adminUser",
+                pwd: "strongPassword",
+                roles: [ { role: "root", db: "admin" } ]
+            })
+EOF
         mongosh "$MONGO_URL" <<EOF
         use sampleDB
         db.sampleDB.insertMany([
@@ -96,7 +96,7 @@ function managedMongoDBSetup (){
         ])
         exit
 EOF
-    echo -e "${GREEN} MongoDB setup done"
+    echo -e "${GREEN}\nMongoDB setup done${NC}\n"
     fi
 }
 
@@ -112,7 +112,7 @@ if ! curl --version &>/dev/null; then
   echo "Installing curl..."
   sudo apt install -y curl
 else
-  echo "curl is already installed, skipping."
+  echo -e "${BLUE}\ncurl is already installed, skipping.\n${NC}"
 fi
 
 # Check and install Node.js v20
@@ -121,7 +121,7 @@ if ! node --version | grep -q '^v20\.'; then
   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
   sudo apt install -y nodejs
 else
-  echo "Node.js 20.x is already installed, skipping."
+  echo -e "${BLUE}\nNode.js 20.x is already installed, skipping.${NC}\n"
 fi
 
 # Check and install npm@11
@@ -129,7 +129,7 @@ if ! npm --version | grep -q '^11\.'; then
   echo "Upgrading npm to v11..."
   npm install -g npm@11
 else
-  echo "npm v11 is already installed, skipping."
+  echo -e "${BLUE}\nnpm v11 is already installed, skipping.${NC}\n"
 fi
 
 # Check and install pm2
@@ -137,7 +137,7 @@ if ! pm2 --version &>/dev/null; then
   echo "Installing pm2..."
   npm install -g pm2
 else
-  echo "pm2 is already installed, skipping."
+  echo -e "${BLUE}\npm2 is already installed, skipping.${NC}\n"
 fi
 
 # Check and install ufw
@@ -145,12 +145,18 @@ if ! ufw --version &>/dev/null; then
   echo "Installing ufw..."
   sudo apt install -y ufw
 else
-  echo "ufw is already installed, skipping."
+  echo -e "${BLUE}\nufw is already installed, skipping.\n"
 fi
 # for mongoDB installation
 managedMongoDBSetup
 # sudo ufw allow 27017
 # sudo systemctl restart mongod
+
+# Spinning MERN-App
+function spinMERNapp(){
+echo -e "${BLUE} starting..."
+}
+spinMERNapp
 
 endTime=$(date +%s)
 runtime=$((endTime - startTime))
