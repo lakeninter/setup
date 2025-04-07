@@ -37,7 +37,7 @@ echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}mongodb://$USERNAME:$PASSW
 isMongoDB=0
 function managedMongoDBSetup (){
     if command -v mongod >/dev/null 2>&1; then
-        echo -e "${BLUE}\nMongoDB is already installed, skipping.\n${NC}"
+        echo -e "${BLUE}MongoDB is already installed, skipping.\n${NC}"
         isMongoDB=1
     else
         # Step 1: Import MongoDB GPG Key
@@ -96,7 +96,7 @@ EOF
         ])
         exit
 EOF
-    echo -e "${GREEN}\nMongoDB setup done${NC}\n"
+    echo -e "${GREEN}MongoDB setup done${NC}\n"
     fi
 }
 
@@ -112,7 +112,7 @@ if ! curl --version &>/dev/null; then
   echo "Installing curl..."
   sudo apt install -y curl
 else
-  echo -e "${BLUE}\ncurl is already installed, skipping.\n${NC}"
+  echo -e "${BLUE}curl is already installed, skipping.\n${NC}"
 fi
 
 # Check and install Node.js v20
@@ -121,7 +121,7 @@ if ! node --version | grep -q '^v20\.'; then
   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
   sudo apt install -y nodejs
 else
-  echo -e "${BLUE}\nNode.js 20.x is already installed, skipping.${NC}\n"
+  echo -e "${BLUE}Node.js 20.x is already installed, skipping.${NC}\n"
 fi
 
 # Check and install npm@11
@@ -129,7 +129,7 @@ if ! npm --version | grep -q '^11\.'; then
   echo "Upgrading npm to v11..."
   npm install -g npm@11
 else
-  echo -e "${BLUE}\nnpm v11 is already installed, skipping.${NC}\n"
+  echo -e "${BLUE}npm v11 is already installed, skipping.${NC}\n"
 fi
 
 # Check and install pm2
@@ -137,7 +137,7 @@ if ! pm2 --version &>/dev/null; then
   echo "Installing pm2..."
   npm install -g pm2
 else
-  echo -e "${BLUE}\npm2 is already installed, skipping.${NC}\n"
+  echo -e "${BLUE}pm2 is already installed, skipping.${NC}\n"
 fi
 
 # Check and install ufw
@@ -145,7 +145,7 @@ if ! ufw --version &>/dev/null; then
   echo "Installing ufw..."
   sudo apt install -y ufw
 else
-  echo -e "${BLUE}\nufw is already installed, skipping.\n"
+  echo -e "${BLUE}ufw is already installed, skipping.\n"
 fi
 # for mongoDB installation
 managedMongoDBSetup
@@ -154,7 +154,7 @@ managedMongoDBSetup
 
 # Spinning MERN-App
 function spinMERNapp(){
-echo -e "${BLUE} starting..."
+echo -e "${BLUE}starting..."
 }
 spinMERNapp
 
