@@ -149,80 +149,8 @@ fi
 managedMongoDBSetup
 
 # Optionally open Mongo port via ufw (uncomment if you want it open publicly)
-# sudo ufw allow 27017
-
-#############################################
-#      SPIN UP THE MERN APPLICATIONS       #
-#############################################
-
-function spinMERNapp(){
-  echo -e "${BLUE}Starting MERN App Setup...${NC}"
-
-  # Ensure our "works" subdirectories exist
-  mkdir -p works/backend
-  mkdir -p works/frontend
-
-  # 1) Download and unzip Node-Express backend into works/backend
-  echo -e "${YELLOW}Downloading Node Express zip...${NC}"
-  curl -L -o node-express.zip \
-    "https://github.com/lakeninter/setup/raw/refs/heads/main/node-express.zip"
-
-  echo -e "${YELLOW}Unzipping Node Express into ./works/backend...${NC}"
-  unzip -o node-express.zip -d ./works/backend
-
-  # 2) Create .env file in backend with user-provided MONGO_URL
-  cd works/backend
-  echo -e "${YELLOW}Creating .env for backend...${NC}"
-  cat <<EOF > .env
-PORT=5000
-MONGO_URL=${MONGO_URL}
-EOF
-
-  # 3) Install dependencies
-  echo -e "${YELLOW}Installing backend dependencies (npm i)...${NC}"
-  npm install
-
-  # 4) Start with pm2 or run dev
-  echo -e "${YELLOW}Starting backend with pm2...${NC}"
-  pm2 start npm --name "mern-backend" -- run dev
-
-  # Go back to project root
-  cd ../../
-
-  # 5) Download and unzip React-Vite-Tailwind frontend into works/frontend
-  echo -e "${YELLOW}Downloading React Vite Tailwind zip...${NC}"
-  curl -L -o react-vite-tailwind.zip \
-    "https://github.com/lakeninter/setup/raw/refs/heads/main/react-vite-tailwind.zip"
-
-  echo -e "${YELLOW}Unzipping React Vite Tailwind into ./works/frontend...${NC}"
-  unzip -o react-vite-tailwind.zip -d ./works/frontend
-
-  # 6) Install dependencies for React app
-  cd works/frontend
-  echo -e "${YELLOW}Installing frontend dependencies (npm i)...${NC}"
-  npm install
-
-  # 7) Start React app with pm2 (dev mode)
-  echo -e "${YELLOW}Starting frontend with pm2...${NC}"
-  pm2 start npm --name "mern-frontend" -- run dev
-
-  cd ../../
-
-  echo -e "\n${GREEN}MERN apps are now running via pm2.${NC}"
-  
-  # Optional: Show PM2 logs (last 100 lines) for verification
-  echo -e "\n${BLUE}Showing PM2 logs (last 100 lines) for the backend:${NC}"
-  pm2 logs mern-backend --lines 100 --nostream
-
-  echo -e "\n${BLUE}Showing PM2 logs (last 100 lines) for the frontend:${NC}"
-  pm2 logs mern-frontend --lines 100 --nostream
-
-  echo -e "\nTo continuously tail logs, use:"
-  echo -e "  ${YELLOW}pm2 logs mern-backend${NC} or ${YELLOW}pm2 logs mern-frontend${NC}"
-  echo -e "To see pm2 status: ${YELLOW}pm2 list${NC}"
-}
-
-spinMERNapp
+sudo ufw allow 27017
+sudo systemctl restart mongod
 
 endTime=$(date +%s)
 runtime=$((endTime - startTime))
