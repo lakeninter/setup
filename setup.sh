@@ -23,3 +23,12 @@ function greetFunc(){
 
 }
 greetFunc
+
+# Taking inputs from the user
+read -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" IP
+read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
+read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
+
+
+MONGO_URL="\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin${NC}\n"
+echo -e $MONGO_URL
