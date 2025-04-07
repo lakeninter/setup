@@ -51,13 +51,13 @@ function managedMongoDBSetup (){
         sudo apt-get install -y mongodb-org
 
         # Step 5: Start MongoDB Service
-        # sudo systemctl start mongod
+        sudo systemctl start mongod
 
         # Step 6: Enable MongoDB Service on Boot
         sudo systemctl enable mongod
 
         # Step 7: Check MongoDB Status
-        systemctl status mongod
+        # systemctl status mongod
 
         # Step 8: Updating /etc/mongod.conf to allow remote connections + auth
         sudo sed -i '$a\
