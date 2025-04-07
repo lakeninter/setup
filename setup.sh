@@ -79,14 +79,14 @@ function managedMongoDBSetup (){
         sudo systemctl restart mongod
 
         # Step 10: Inserting sample data in DB
-        mongosh <<EOF
-            use admin
-            db.createUser({
-                user: "adminUser",
-                pwd: "strongPassword",
-                roles: [ { role: "root", db: "admin" } ]
-            })
-        EOF
+#         mongosh <<EOF
+#             use admin
+#             db.createUser({
+#                 user: "adminUser",
+#                 pwd: "strongPassword",
+#                 roles: [ { role: "root", db: "admin" } ]
+#             })
+# EOF
         mongosh "$MONGO_URL" <<EOF
         use sampleDB
         db.sampleDB.insertMany([
@@ -101,17 +101,61 @@ EOF
 }
 
 
-# Installing packages
+
+startTime=$(date +%s)
+# Update system
 sudo apt update && sudo apt upgrade -y
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y curl nodejs
-npm install -g npm@11
-npm install -g pm2
-sudo apt-get install ufw
-# Involking managedMongoDBSetup function
+
+# Installing packages
+# Check and install curl
+if ! curl --version &>/dev/null; then
+  echo "Installing curl..."
+  sudo apt install -y curl
+else
+  echo "curl is already installed, skipping."
+fi
+
+# Check and install Node.js v20
+if ! node --version | grep -q '^v20\.'; then
+  echo "Installing Node.js 20.x..."
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+  sudo apt install -y nodejs
+else
+  echo "Node.js 20.x is already installed, skipping."
+fi
+
+# Check and install npm@11
+if ! npm --version | grep -q '^11\.'; then
+  echo "Upgrading npm to v11..."
+  npm install -g npm@11
+else
+  echo "npm v11 is already installed, skipping."
+fi
+
+# Check and install pm2
+if ! pm2 --version &>/dev/null; then
+  echo "Installing pm2..."
+  npm install -g pm2
+else
+  echo "pm2 is already installed, skipping."
+fi
+
+# Check and install ufw
+if ! ufw --version &>/dev/null; then
+  echo "Installing ufw..."
+  sudo apt install -y ufw
+else
+  echo "ufw is already installed, skipping."
+fi
+# for mongoDB installation
 managedMongoDBSetup
+# sudo ufw allow 27017
+# sudo systemctl restart mongod
 
-sudo ufw allow 27017
-sudo systemctl restart mongod
+endTime=$(date +%s)
+runtime=$((endTime - startTime))
+# Calculate minutes and seconds separately
+minutes=$((runtime / 60))
+seconds=$((runtime % 60))
 
-
+echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seconds} sec${NC}"
