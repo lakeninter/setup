@@ -61,6 +61,8 @@ function spinMern() {
 
   unzip express-node.zip -d ./works/backend
 
+  # clean up
+  rm -rf react-vite.zip express-node.zip
 }
 
 startTime=$(date +%s)
