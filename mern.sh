@@ -49,6 +49,18 @@ function spinMern() {
   # sudo apt-get remove -y zip
   installPackageIfNotExits "zip"
   
+  # Creating Directory
+  mkdir -p ./works
+
+  # Unzipping files
+  curl -L -o react-vite.zip https://github.com/lakeninter/setup/raw/refs/heads/main/react-vite-tailwind.zip 
+
+  curl -L -o express-node.zip https://github.com/lakeninter/setup/raw/refs/heads/main/node-express.zip
+
+  unzip react-vite.zip -d ./works/frontend
+
+  unzip express-node.zip -d ./works/backend
+
 }
 
 startTime=$(date +%s)
