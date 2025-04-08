@@ -123,9 +123,9 @@ EOF
 startTime=$(date +%s)
 
 # Update system
-sleep 3
+sleep 1.5
 sudo apt-get update -y && sudo apt-get upgrade -y
-sleep 3
+sleep 1.5
 
 #########################################
 # Installing packages
@@ -138,7 +138,7 @@ if ! command -v curl &>/dev/null; then
 else
   echo -e "${BLUE}curl is already installed, skipping.${NC}\n"
 fi
-sleep 3
+sleep 1.5
 
 # Check and install Node.js v20
 if ! node --version 2>/dev/null | grep -q '^v20\.'; then
@@ -148,7 +148,7 @@ if ! node --version 2>/dev/null | grep -q '^v20\.'; then
 else
   echo -e "${BLUE}Node.js 20.x is already installed, skipping.${NC}\n"
 fi
-sleep 3
+sleep 1.5
 
 # Check and install npm@11
 if ! npm --version 2>/dev/null | grep -q '^11\.'; then
@@ -157,7 +157,7 @@ if ! npm --version 2>/dev/null | grep -q '^11\.'; then
 else
   echo -e "${BLUE}npm v11 is already installed, skipping.${NC}\n"
 fi
-sleep 3
+sleep 1.5
 
 # Check and install pm2
 if ! command -v pm2 &>/dev/null; then
@@ -166,7 +166,7 @@ if ! command -v pm2 &>/dev/null; then
 else
   echo -e "${BLUE}pm2 is already installed, skipping.${NC}\n"
 fi
-sleep 3
+sleep 1.5
 
 # Check and install ufw
 if ! command -v ufw &>/dev/null; then
@@ -175,7 +175,7 @@ if ! command -v ufw &>/dev/null; then
 else
   echo -e "${BLUE}ufw is already installed, skipping.${NC}"
 fi
-sleep 3
+sleep 1.5
 
 #########################################
 # Setup MongoDB
