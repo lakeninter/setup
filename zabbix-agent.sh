@@ -50,7 +50,7 @@ sed -i 's/^ServerActive=.*/ServerActive=67.220.85.106/' /etc/zabbix/zabbix_agent
 systemctl restart zabbix-agent
 
 # Optional: Check status of the Zabbix agent service
-systemctl status zabbix-agent
+# systemctl status zabbix-agent
 
 endTime=$(date, +%s)
 runTime=$((endTime - startTime))
