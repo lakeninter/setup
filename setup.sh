@@ -34,6 +34,37 @@ function managedMongoDBSetup (){
     if command -v mongod >/dev/null 2>&1; then
         echo -e "${BLUE}MongoDB is already installed, skipping.\n${NC}"
         isMongoDB=1
+
+        # Step 5: Start MongoDB Service
+        sudo systemctl start mongod
+
+        # Step 6: Enable MongoDB Service on Boot
+        sudo systemctl enable mongod
+
+        # Step 6: Enable MongoDB Service on Boot
+        sudo systemctl daemon-reload
+
+        sudo systemctl restart mongod
+
+        # Step 10: Inserting sample data in DB
+        mongosh <<EOF
+            use admin
+            db.createUser({
+                user: "adminUser",
+                pwd: "strongPassword",
+                roles: [ { role: "root", db: "admin" } ]
+            })
+EOF
+        mongosh "${MONGO_URL}" <<EOF
+            use sampleDB
+            db.sampleDB.insertMany([
+                { name: "John", age: 30 },
+                { name: "Jane", age: 25 },
+                { name: "Bob", age: 40 }
+            ])
+            exit
+EOF
+        echo -e "${GREEN}MongoDB check done${NC}\n"
     else
         # Step 1: Import MongoDB GPG Key
         curl -fsSL https://pgp.mongodb.com/server-6.0.asc \
@@ -43,7 +74,7 @@ function managedMongoDBSetup (){
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] \
         https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" \
         | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-
+        
         # Step 3: Update Package Database
         sudo apt-get update
 
@@ -60,16 +91,14 @@ function managedMongoDBSetup (){
         # systemctl status mongod
 
         # Step 8: Updating /etc/mongod.conf to allow remote connections + auth
-        sudo sed -i '$a\
-        security:\
-          authorization: enabled' /etc/mongod.conf
+        # 1) Update bindIp:
+        sed -i 's/^  bindIp: 127.0.0.1$/  bindIp: 0.0.0.0/' /etc/mongod.conf
 
-        sudo sed -i '$a\
-        net:\
-          port: 27017\
-          bindIp: 0.0.0.0' /etc/mongod.conf
+        # 2) Uncomment #security: and add authorization: enabled beneath it
+        sed -i 's/^#security:/security:\n  authorization: enabled/' /etc/mongod.conf
 
         # Step 9: Restart mongod
+        sudo systemctl daemon-reload
         sudo systemctl restart mongod
 
         # Step 10: Inserting sample data in DB
@@ -97,8 +126,9 @@ EOF
 startTime=$(date +%s)
 
 # Update system
+sleep 3
 sudo apt update && sudo apt upgrade -y
-
+sleep 3
 # Installing packages
 # Check and install curl
 if ! curl --version &>/dev/null; then
@@ -107,6 +137,7 @@ if ! curl --version &>/dev/null; then
 else
   echo -e "${BLUE}curl is already installed, skipping.\n${NC}"
 fi
+sleep 3
 
 # Check and install Node.js v20
 if ! node --version 2>/dev/null | grep -q '^v20\.'; then
@@ -116,6 +147,7 @@ if ! node --version 2>/dev/null | grep -q '^v20\.'; then
 else
   echo -e "${BLUE}Node.js 20.x is already installed, skipping.${NC}\n"
 fi
+sleep 3
 
 # Check and install npm@11
 if ! npm --version 2>/dev/null | grep -q '^11\.'; then
@@ -124,6 +156,7 @@ if ! npm --version 2>/dev/null | grep -q '^11\.'; then
 else
   echo -e "${BLUE}npm v11 is already installed, skipping.${NC}\n"
 fi
+sleep 3
 
 # Check and install pm2
 if ! pm2 --version &>/dev/null; then
@@ -132,6 +165,7 @@ if ! pm2 --version &>/dev/null; then
 else
   echo -e "${BLUE}pm2 is already installed, skipping.${NC}\n"
 fi
+sleep 3
 
 # Check and install ufw
 if ! ufw --version &>/dev/null; then
@@ -140,13 +174,14 @@ if ! ufw --version &>/dev/null; then
 else
   echo -e "${BLUE}ufw is already installed, skipping.\n${NC}"
 fi
-
+sleep 3
 # Setup MongoDB
 managedMongoDBSetup
 
+sleep 3
 # Optionally open Mongo port via ufw (uncomment if you want it open publicly)
 sudo ufw allow 27017
-sudo systemctl enable mongod
+sudo systemctl restart mongod
 
 # Mongo connection string
 MONGO_URL="mongodb://${USERNAME}:${PASSWORD}@${IP}:27017/?authSource=admin"
