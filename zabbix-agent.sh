@@ -57,5 +57,8 @@ runTime=$((endTime - startTime))
 minutes=$((runtime / 60))
 seconds=$((runtime % 60))
 
+# Removing files 
+rm -rf zabbix-release_latest_7.2+ubuntu24.04_all.deb
+
 echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seconds} sec${NC}"
 echo -e "${GREEN}${BOLD}Zabbix agent installed successfully"
