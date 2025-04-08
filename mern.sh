@@ -63,6 +63,14 @@ function spinMern() {
 
   # clean up
   rm -rf react-vite.zip express-node.zip
+
+  cd works/frontend/
+  npm i
+  cd ../backend/
+  npm i
+  npm run both
+
+  echo -e "${GREEN}${BOLD}Frontend started on: ${UNDERLINE}http://localhost:5173\nBackend started on: ${UNDERLINE}http://localhost:5000"
 }
 
 startTime=$(date +%s)
