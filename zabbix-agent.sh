@@ -25,8 +25,11 @@ function greetFunc(){
     echo -e "${BLUE}*                                  *${NC}"
     echo -e "${BLUE}************************************${NC}"
 }
-startTime=$(date, +%s)
+
+startTime=$(date +%s)
+
 greetFunc
+
 echo -e "\n${GREEN} Zabbix installation will begin\n Please wait...${NC}\n"
 set -e
 
@@ -52,7 +55,7 @@ systemctl restart zabbix-agent
 # Optional: Check status of the Zabbix agent service
 # systemctl status zabbix-agent
 
-endTime=$(date, +%s)
+endTime=$(date +%s)
 runTime=$((endTime - startTime))
 minutes=$((runtime / 60))
 seconds=$((runtime % 60))
