@@ -64,4 +64,4 @@ seconds=$((runtime % 60))
 rm -rf zabbix-release_latest_7.2+ubuntu24.04_all.deb
 
 echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seconds} sec${NC}"
-echo -e "${GREEN}${BOLD}Zabbix agent installed successfully"
+echo -e "${GREEN}${BOLD}Zabbix agent installed successfully${NC}"
