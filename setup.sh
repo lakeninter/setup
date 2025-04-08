@@ -1,6 +1,8 @@
 #!/bin/bash
 
+#########################################
 # Define color variables
+#########################################
 NC='\033[0m'          # No Color / Reset
 BOLD='\033[1m'
 UNDERLINE='\033[4m'
@@ -12,7 +14,9 @@ MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 
+#########################################
 # Greetings
+#########################################
 function greetFunc(){
     clear
     echo -e "${BLUE}************************************${NC}"
@@ -23,20 +27,26 @@ function greetFunc(){
 }
 greetFunc
 
+#########################################
 # Taking inputs from the user
+#########################################
 read -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" IP
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
 
-# Check mongodb is installed
-isMongoDB=0
-function managedMongoDBSetup (){
-    if command -v mongod >/dev/null 2>&1; then
-        echo -e "${BLUE}MongoDB is already installed, skipping.\n${NC}"
-        isMongoDB=1
+# Construct the Mongo Connection String (needed inside the function too)
+MONGO_URL="mongodb://${USERNAME}:${PASSWORD}@${IP}:27017/?authSource=admin"
 
+#########################################
+# MongoDB Setup
+#########################################
+function managedMongoDBSetup (){
+    # If mongod is already installed, skip the main installation steps
+    if command -v mongod >/dev/null 2>&1; then
+        echo -e "${BLUE}MongoDB is already installed, skipping main installation.\n${NC}"
+        
         # Step 1: Update
-        sudo apt-get update
+        sudo apt-get update -y
 
         # Step 5: Start MongoDB Service
         sudo systemctl start mongod
@@ -48,25 +58,6 @@ function managedMongoDBSetup (){
         sudo systemctl daemon-reload
         sudo systemctl restart mongod
 
-        # Step 10: Inserting sample data in DB
-        mongosh <<EOF
-            use admin
-            db.createUser({
-                user: "adminUser",
-                pwd: "strongPassword",
-                roles: [ { role: "root", db: "admin" } ]
-            })
-EOF
-        mongosh "${MONGO_URL}" <<EOF
-            use sampleDB
-            db.sampleDB.insertMany([
-                { name: "John", age: 30 },
-                { name: "Jane", age: 25 },
-                { name: "Bob", age: 40 }
-            ])
-            exit
-EOF
-        echo -e "${GREEN}MongoDB check done${NC}\n"
     else
         # Step 1: Import MongoDB GPG Key
         curl -fsSL https://pgp.mongodb.com/server-6.0.asc \
@@ -74,11 +65,11 @@ EOF
 
         # Step 2: Add the MongoDB Repository
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] \
-        https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" \
+https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" \
         | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-        
+
         # Step 3: Update Package Database
-        sudo apt-get update
+        sudo apt-get update -y
 
         # Step 4: Install MongoDB
         sudo apt-get install -y mongodb-org
@@ -89,55 +80,63 @@ EOF
         # Step 6: Enable MongoDB Service on Boot
         sudo systemctl enable mongod
 
-        # Step 7: Check MongoDB Status
-        # systemctl status mongod
-
         # Step 8: Updating /etc/mongod.conf to allow remote connections + auth
-        # 1) Update bindIp:
-        sed -i 's/^  bindIp: 127.0.0.1$/  bindIp: 0.0.0.0/' /etc/mongod.conf
-
-        # 2) Uncomment #security: and add authorization: enabled beneath it
-        sed -i 's/^#security:/security:\n  authorization: enabled/' /etc/mongod.conf
+        sudo sed -i 's/^  bindIp: 127.0.0.1$/  bindIp: 0.0.0.0/' /etc/mongod.conf
+        sudo sed -i 's/^#security:/security:\n authorization: enabled/' /etc/mongod.conf
 
         # Step 9: Restart mongod
         sudo systemctl daemon-reload
         sudo systemctl restart mongod
-
-        # Step 10: Inserting sample data in DB
-        mongosh <<EOF
-            use admin
-            db.createUser({
-                user: "adminUser",
-                pwd: "strongPassword",
-                roles: [ { role: "root", db: "admin" } ]
-            })
-EOF
-        mongosh "${MONGO_URL}" <<EOF
-            use sampleDB
-            db.sampleDB.insertMany([
-                { name: "John", age: 30 },
-                { name: "Jane", age: 25 },
-                { name: "Bob", age: 40 }
-            ])
-            exit
-EOF
-        echo -e "${GREEN}MongoDB setup done${NC}\n"
     fi
+
+    #########################################
+    # Step 10: Create the admin user and insert sample data
+    # IMPORTANT: Use the credentials from the user input
+    #########################################
+    echo -e "${BLUE}Creating user '$USERNAME' in admin DB.${NC}"
+    mongosh <<EOF
+        use admin
+        db.createUser({
+            user: "$USERNAME",
+            pwd: "$PASSWORD",
+            roles: [ { role: "root", db: "admin" } ]
+        })
+EOF
+
+    echo -e "${BLUE}Inserting sample data into sampleDB...${NC}"
+    mongosh "${MONGO_URL}" <<EOF
+        use sampleDB
+        db.sampleDB.insertMany([
+            { name: "John", age: 30 },
+            { name: "Jane", age: 25 },
+            { name: "Bob", age: 40 }
+        ])
+        exit
+EOF
+
+    echo -e "${GREEN}MongoDB setup/check complete.${NC}\n"
 }
 
+#########################################
+# Main Script Start
+#########################################
 startTime=$(date +%s)
 
 # Update system
 sleep 3
-sudo apt update && sudo apt upgrade -y
+sudo apt-get update -y && sudo apt-get upgrade -y
 sleep 3
+
+#########################################
 # Installing packages
+#########################################
+
 # Check and install curl
-if ! curl --version &>/dev/null; then
+if ! command -v curl &>/dev/null; then
   echo "Installing curl..."
-  sudo apt install -y curl
+  sudo apt-get install -y curl
 else
-  echo -e "${BLUE}curl is already installed, skipping.\n${NC}"
+  echo -e "${BLUE}curl is already installed, skipping.${NC}\n"
 fi
 sleep 3
 
@@ -145,7 +144,7 @@ sleep 3
 if ! node --version 2>/dev/null | grep -q '^v20\.'; then
   echo "Installing Node.js 20.x..."
   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-  sudo apt install -y nodejs
+  sudo apt-get install -y nodejs
 else
   echo -e "${BLUE}Node.js 20.x is already installed, skipping.${NC}\n"
 fi
@@ -161,7 +160,7 @@ fi
 sleep 3
 
 # Check and install pm2
-if ! pm2 --version &>/dev/null; then
+if ! command -v pm2 &>/dev/null; then
   echo "Installing pm2..."
   sudo npm install -g pm2
 else
@@ -170,23 +169,28 @@ fi
 sleep 3
 
 # Check and install ufw
-if ! ufw --version &>/dev/null; then
+if ! command -v ufw &>/dev/null; then
   echo "Installing ufw..."
-  sudo apt install -y ufw
+  sudo apt-get install -y ufw
 else
-  echo -e "${BLUE}ufw is already installed, skipping.\n${NC}"
+  echo -e "${BLUE}ufw is already installed, skipping.${NC}"
 fi
 sleep 3
+
+#########################################
 # Setup MongoDB
+#########################################
 managedMongoDBSetup
 
-sleep 3
-# Optionally open Mongo port via ufw (uncomment if you want it open publicly)
+#########################################
+# Optionally open Mongo port via ufw
+#########################################
 sudo ufw allow 27017
 sudo systemctl restart mongod
 
-# Mongo connection string
-MONGO_URL="mongodb://${USERNAME}:${PASSWORD}@${IP}:27017/?authSource=admin"
+#########################################
+# Print final MONGO_URL for the user
+#########################################
 echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
 endTime=$(date +%s)
