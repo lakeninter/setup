@@ -70,7 +70,7 @@ function spinMern() {
   npm i
   npm run both
 
-  echo -e "${GREEN}${BOLD}Frontend started on: ${UNDERLINE}http://localhost:5173\nBackend started on: ${UNDERLINE}http://localhost:5000"
+  echo -e "${GREEN}${BOLD}Frontend started on: ${BLUE}${UNDERLINE}http://localhost:5173 \nBackend started on: ${BLUE}${UNDERLINE}http://localhost:5000${NC}"
 }
 
 startTime=$(date +%s)
