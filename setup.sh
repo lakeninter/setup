@@ -35,15 +35,17 @@ function managedMongoDBSetup (){
         echo -e "${BLUE}MongoDB is already installed, skipping.\n${NC}"
         isMongoDB=1
 
+        # Step 1: Update
+        sudo apt-get update
+
         # Step 5: Start MongoDB Service
         sudo systemctl start mongod
 
         # Step 6: Enable MongoDB Service on Boot
         sudo systemctl enable mongod
 
-        # Step 6: Enable MongoDB Service on Boot
+        # Step 9: Restart mongod
         sudo systemctl daemon-reload
-
         sudo systemctl restart mongod
 
         # Step 10: Inserting sample data in DB
