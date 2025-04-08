@@ -33,7 +33,7 @@ greetFunc
 function installPackageIfNotExits(){
   packageName="$1"
 
-  if command -v "$packageName" > /dev/null; then
+  if ! command -v "$packageName" > /dev/null; then
     echo -e "${YELLOW}${BOLD}$packageName could not be found, Installing $packageName...${NC}"
     sudo apt-get install -y zip
   else
