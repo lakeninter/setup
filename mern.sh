@@ -28,10 +28,32 @@ function greetFunc(){
 greetFunc
 
 #########################################
-# Main Script Start
+# Function to check and install zip if not installed
 #########################################
-startTime=$(date +%s)
+function installPackageIfNotExits(){
+  packageName="$1"
 
+  if command -v "$packageName" > /dev/null; then
+    echo -e "${YELLOW}${BOLD}$packageName could not be found, Installing $packageName...${NC}"
+    sudo apt-get install -y zip
+  else
+    echo -e "${GREEN}$packageName is already installed....${NC}"
+    
+  fi
+}
+#########################################
+# Function to spin MERN app
+#########################################
+
+function spinMern() {
+  # sudo apt-get remove -y zip
+  installPackageIfNotExits "zip"
+  
+}
+
+startTime=$(date +%s)
+# Calling spinMern fuction
+spinMern
 endTime=$(date +%s)
 runtime=$((endTime - startTime))
 minutes=$((runtime / 60))
