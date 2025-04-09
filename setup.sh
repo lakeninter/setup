@@ -3,7 +3,7 @@
 #########################################
 # Define color variables
 #########################################
-NC='\033[0m'          # No Color / Reset
+NC='\033[0m' # No Color / Reset
 BOLD='\033[1m'
 UNDERLINE='\033[4m'
 RED='\033[0;31m'
@@ -17,7 +17,7 @@ WHITE='\033[0;37m'
 #########################################
 # Greetings
 #########################################
-function greetFunc(){
+function greetFunc() {
     clear
     echo -e "${BLUE}************************************${NC}"
     echo -e "${BLUE}*                                  *${NC}"
@@ -40,40 +40,50 @@ MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
 #########################################
 # Function to check and install zip if not installed
 #########################################
-function installPackageIfNotExits(){
-  packageName="$1"
-  installCMD="$2"
+function installPackageIfNotExits() {
+    packageName="$1"
+    installCMD="$2"
 
-  if ! command -v "$packageName" > /dev/null; then
-    echo -e "${YELLOW}${BOLD}$packageName could not be found, Installing $packageName...${NC}"
-    sudo apt-get update -y
-    sudo $2
-  else
-    echo -e "${GREEN}$packageName is already installed....${NC}"
-    
-  fi
+    if ! command -v "$packageName" >/dev/null; then
+        echo -e "${YELLOW}${BOLD}$packageName could not be found, Installing $packageName...${NC}"
+        sudo apt-get update -y
+        sudo $2
+    else
+        echo -e "${GREEN}$packageName is already installed....${NC}"
+
+    fi
 }
 
 #########################################
 # MongoDB Setup
 #########################################
-function managedMongoDBSetup (){
+function managedMongoDBSetup() {
     # If mongod is already installed, skip the main installation steps
-    if command -v mongod >/dev/null 2>&1; then
-        echo -e "${BLUE}MongoDB is already installed, skipping main installation.\n${NC}"
-        
-        # Step 1: Update
-        sudo apt-get update -y
+    if command -v mongod >/dev/null; then
+        echo -e "${BLUE}MongoDB is already installed....${NC}"
 
         # Step 5: Start MongoDB Service
-        sudo systemctl start mongod
+        # sudo systemctl start mongod
 
-        # Step 6: Enable MongoDB Service on Boot
-        sudo systemctl enable mongod
+        # # Step 6: Enable MongoDB Service on Boot
+        # sudo systemctl enable mongod
 
-        # Step 9: Restart mongod
-        sudo systemctl daemon-reload
-        sudo systemctl restart mongod
+        # # Step 9: Restart mongod
+        # sudo systemctl daemon-reload
+        # sudo systemctl restart mongod
+
+        echo -e "${BLUE}Inserting sample data into sampleDB...${NC}"
+        mongosh "$MONGO_URL" <<EOF
+            use sampleDB
+            db.sampleDB.insertMany([
+                { name: "John", age: 30 },
+                { name: "Jane", age: 25 },
+                { name: "Bob", age: 40 }
+            ])
+            exit
+EOF
+
+        echo -e "${GREEN}MongoDB sample data inserted.${NC}\n"
 
     else
         # Step 1: Import MongoDB GPG Key
@@ -104,6 +114,33 @@ function managedMongoDBSetup (){
         # Step 9: Restart mongod
         sudo systemctl daemon-reload
         sudo systemctl restart mongod
+
+        #########################################
+        # Step 10: Create the admin user and insert sample data
+        # IMPORTANT: Use the credentials from the user input
+        #########################################
+        echo -e "${BLUE}Creating user '$USERNAME' in admin DB.${NC}"
+        mongosh <<EOF
+            use admin
+            db.createUser({
+                user: "$USERNAME",
+                pwd: "$PASSWORD",
+                roles: [ { role: "root", db: "admin" } ]
+            })
+EOF
+
+        echo -e "${BLUE}Inserting sample data into sampleDB...${NC}"
+        mongosh "$MONGO_URL" <<EOF
+            use sampleDB
+            db.sampleDB.insertMany([
+                { name: "John", age: 30 },
+                { name: "Jane", age: 25 },
+                { name: "Bob", age: 40 }
+            ])
+            exit
+EOF
+
+        echo -e "${GREEN}MongoDB sample data inserted.${NC}\n"
     fi
 }
 
@@ -130,7 +167,7 @@ installPackageIfNotExits "node" "sudo apt-get install -y node"
 sleep 1.5
 
 # Check and install npm@11
-installPackageIfNotExits "mpm" "npm install -g npm@11"
+installPackageIfNotExits "npm" "npm install -g npm@11"
 sleep 1.5
 
 # Check and install pm2
