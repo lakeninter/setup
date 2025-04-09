@@ -61,9 +61,8 @@ function installPackageIfNotExits() {
                 echo -e "${YELLOW}${BOLD}$packageName version $installedVersion is less than required $packageVersion. Upgrading...${NC}"
                 eval "$installCMD"
             else
-                echo -e "${GREEN}$installedVersion is version installed with version $packageVersion${NC}"
+                echo -e "${GREEN}$packageName is already installed with version $packageVersion ${NC}"
             fi
-            echo -e "${GREEN}$installedVersion is version installed....${NC}"
         else
             echo -e "${GREEN}$packageName is already installed....${NC}"
         fi
