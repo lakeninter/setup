@@ -64,6 +64,13 @@ function spinMern() {
   # clean up
   rm -rf react-vite.zip express-node.zip
 
+  echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
+
+  # creating .env.local file
+  cat <<EOF > ./works/backend/.env.local
+MONGO_URL=${MONGO_URL}
+EOF
+
   cd works/frontend/
   npm i
   cd ../backend/
