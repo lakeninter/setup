@@ -35,7 +35,24 @@ read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
 
 # Construct the Mongo Connection String (needed inside the function too)
-MONGO_URL="mongodb://${USERNAME}:${PASSWORD}@${IP}:27017/?authSource=admin"
+MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
+
+#########################################
+# Function to check and install zip if not installed
+#########################################
+function installPackageIfNotExits(){
+  packageName="$1"
+  installCMD="$2"
+
+  if ! command -v "$packageName" > /dev/null; then
+    echo -e "${YELLOW}${BOLD}$packageName could not be found, Installing $packageName...${NC}"
+    sudo apt-get update -y
+    sudo $2
+  else
+    echo -e "${GREEN}$packageName is already installed....${NC}"
+    
+  fi
+}
 
 #########################################
 # MongoDB Setup
@@ -65,7 +82,7 @@ function managedMongoDBSetup (){
 
         # Step 2: Add the MongoDB Repository
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] \
-https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" \
+        https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" \
         | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 
         # Step 3: Update Package Database
@@ -88,33 +105,6 @@ https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" \
         sudo systemctl daemon-reload
         sudo systemctl restart mongod
     fi
-
-    #########################################
-    # Step 10: Create the admin user and insert sample data
-    # IMPORTANT: Use the credentials from the user input
-    #########################################
-    echo -e "${BLUE}Creating user '$USERNAME' in admin DB.${NC}"
-    mongosh <<EOF
-        use admin
-        db.createUser({
-            user: "$USERNAME",
-            pwd: "$PASSWORD",
-            roles: [ { role: "root", db: "admin" } ]
-        })
-EOF
-
-    echo -e "${BLUE}Inserting sample data into sampleDB...${NC}"
-    mongosh "${MONGO_URL}" <<EOF
-        use sampleDB
-        db.sampleDB.insertMany([
-            { name: "John", age: 30 },
-            { name: "Jane", age: 25 },
-            { name: "Bob", age: 40 }
-        ])
-        exit
-EOF
-
-    echo -e "${GREEN}MongoDB setup/check complete.${NC}\n"
 }
 
 #########################################
@@ -132,49 +122,27 @@ sleep 1.5
 #########################################
 
 # Check and install curl
-if ! command -v curl &>/dev/null; then
-  echo "Installing curl..."
-  sudo apt-get install -y curl
-else
-  echo -e "${BLUE}curl is already installed, skipping.${NC}\n"
-fi
+installPackageIfNotExits "curl" "sudo apt-get install -y curl"
 sleep 1.5
 
 # Check and install Node.js v20
-if ! node --version 2>/dev/null | grep -q '^v20\.'; then
-  echo "Installing Node.js 20.x..."
-  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-  sudo apt-get install -y nodejs
-else
-  echo -e "${BLUE}Node.js 20.x is already installed, skipping.${NC}\n"
-fi
+installPackageIfNotExits "node" "sudo apt-get install -y node"
 sleep 1.5
 
 # Check and install npm@11
-if ! npm --version 2>/dev/null | grep -q '^11\.'; then
-  echo "Upgrading npm to v11..."
-  sudo npm install -g npm@11
-else
-  echo -e "${BLUE}npm v11 is already installed, skipping.${NC}\n"
-fi
+installPackageIfNotExits "mpm" "npm install -g npm@11"
 sleep 1.5
 
 # Check and install pm2
-if ! command -v pm2 &>/dev/null; then
-  echo "Installing pm2..."
-  sudo npm install -g pm2
-else
-  echo -e "${BLUE}pm2 is already installed, skipping.${NC}\n"
-fi
+installPackageIfNotExits "pm2" "npm install -g pm2"
 sleep 1.5
 
 # Check and install ufw
-if ! command -v ufw &>/dev/null; then
-  echo "Installing ufw..."
-  sudo apt-get install -y ufw
-else
-  echo -e "${BLUE}ufw is already installed, skipping.${NC}"
-fi
+installPackageIfNotExits "ufw" "sudo apt-get install -y ufw"
+sleep 1.5
+
+# Check and install zip
+installPackageIfNotExits "zip" "sudo apt-get install -y zip"
 sleep 1.5
 
 #########################################
@@ -191,7 +159,7 @@ sudo systemctl restart mongod
 #########################################
 # Print final MONGO_URL for the user
 #########################################
-echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
+echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}$MONGO_URL${NC}\n"
 
 endTime=$(date +%s)
 runtime=$((endTime - startTime))
