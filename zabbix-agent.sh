@@ -57,8 +57,8 @@ systemctl restart zabbix-agent
 
 endTime=$(date +%s)
 runTime=$((endTime - startTime))
-minutes=$((runtime / 60))
-seconds=$((runtime % 60))
+minutes=$((runTime / 60))
+seconds=$((runTime % 60))
 
 # Removing files 
 rm -rf zabbix-release_latest_7.2+ubuntu24.04_all.deb
