@@ -224,3 +224,10 @@ minutes=$((runtime / 60))
 seconds=$((runtime % 60))
 
 echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seconds} sec${NC}"
+
+# Spinnig MERN app
+# Export MONGO_URL so the remote script sees it.
+export MONGO_URL="${MONGO_URL}"
+
+# Source the remote mern.sh script.
+source bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern.sh)
