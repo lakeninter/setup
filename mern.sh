@@ -67,7 +67,7 @@ function spinMern() {
   echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
   # creating .env.local file
-  cat <<EOF > ./works/backend/.env.local
+  cat <<EOF > ./works/backend/.env
 MONGO_URL=${MONGO_URL}
 EOF
 
