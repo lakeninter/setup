@@ -47,7 +47,8 @@ function installPackageIfNotExits() {
     if ! command -v "$packageName" >/dev/null; then
         echo -e "${YELLOW}${BOLD}$packageName could not be found, Installing $packageName...${NC}"
         sudo apt-get update -y
-        sudo $installCMD
+        # Use eval to handle commands with pipes and multiple parts.
+        eval "$installCMD"
     else
         echo -e "${GREEN}$packageName is already installed....${NC}"
 
@@ -163,7 +164,7 @@ installPackageIfNotExits "curl" "sudo apt-get install -y curl"
 sleep 1.5
 
 # Check and install Node.js v20
-installPackageIfNotExits "node" "sudo apt install nodejs -y"
+installPackageIfNotExits "nodejs" "curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt install -y nodejs"
 sleep 1.5
 
 # Check and install npm@11
