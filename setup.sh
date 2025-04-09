@@ -43,15 +43,30 @@ MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
 function installPackageIfNotExits() {
     packageName="$1"
     installCMD="$2"
+    packageVersion="$3"
 
+    # if package is not installed
     if ! command -v "$packageName" >/dev/null; then
         echo -e "${YELLOW}${BOLD}$packageName could not be found, Installing $packageName...${NC}"
         sudo apt-get update -y
         # Use eval to handle commands with pipes and multiple parts.
         eval "$installCMD"
     else
-        echo -e "${GREEN}$packageName is already installed....${NC}"
-
+        # If a target version is specified, compare versions.
+        if [ -n "$packageVersion" ]; then
+            # Get the installed package's version.
+            installedVersion=$("$packageName" --version 2>/dev/null | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+")
+            # If the installed version is less than the target version, upgrade.
+            if dpkg --compare-versions "$installedVersion" lt "$packageVersion"; then
+                echo -e "${YELLOW}${BOLD}$packageName version $installedVersion is less than required $packageVersion. Upgrading...${NC}"
+                eval "$installCMD"
+            else
+                echo -e "${GREEN}$installedVersion is version installed with version $packageVersion${NC}"
+            fi
+            echo -e "${GREEN}$installedVersion is version installed....${NC}"
+        else
+            echo -e "${GREEN}$packageName is already installed....${NC}"
+        fi
     fi
 }
 
@@ -172,7 +187,7 @@ installPackageIfNotExits "nodejs" "curl -fsSL https://deb.nodesource.com/setup_2
 sleep 1.5
 
 # Check and install npm@11
-installPackageIfNotExits "npm" "npm install -g npm@11"
+installPackageIfNotExits "npm" "npm install -g npm@11" "11"
 sleep 1.5
 
 # Check and install pm2
