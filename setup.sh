@@ -115,12 +115,15 @@ EOF
         # Step 9: Restart mongod
         sudo systemctl daemon-reload
         sudo systemctl restart mongod
+        
 
         #########################################
         # Step 10: Create the admin user and insert sample data
         # IMPORTANT: Use the credentials from the user input
         #########################################
+        sleep 1.5
         echo -e "${BLUE}Creating user '$USERNAME' in admin DB.${NC}"
+        sleep 1.5
         mongosh <<EOF
             use admin
             db.createUser({
@@ -129,8 +132,9 @@ EOF
                 roles: [ { role: "root", db: "admin" } ]
             })
 EOF
-
+        sleep 1.5
         echo -e "${BLUE}Inserting sample data into sampleDB...${NC}"
+        sleep 1.5
         mongosh "$MONGO_URL" <<EOF
             use sampleDB
             db.sampleDB.insertMany([
