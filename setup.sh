@@ -47,7 +47,7 @@ function installPackageIfNotExits() {
     if ! command -v "$packageName" >/dev/null; then
         echo -e "${YELLOW}${BOLD}$packageName could not be found, Installing $packageName...${NC}"
         sudo apt-get update -y
-        sudo $2
+        sudo $installCMD
     else
         echo -e "${GREEN}$packageName is already installed....${NC}"
 
@@ -163,7 +163,7 @@ installPackageIfNotExits "curl" "sudo apt-get install -y curl"
 sleep 1.5
 
 # Check and install Node.js v20
-installPackageIfNotExits "node" "sudo apt-get install -y node"
+installPackageIfNotExits "node" "sudo apt install nodejs -y"
 sleep 1.5
 
 # Check and install npm@11
@@ -186,6 +186,7 @@ sleep 1.5
 # Setup MongoDB
 #########################################
 managedMongoDBSetup
+sleep 1.5
 
 #########################################
 # Optionally open Mongo port via ufw
