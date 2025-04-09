@@ -75,7 +75,7 @@ function spinMern() {
 
 startTime=$(date +%s)
 # Calling spinMern fuction
-spinMern
+# spinMern
 # Now you can use any variables or functions defined in mern.sh
 echo "MONGO_URL is: $MONGO_URL"
 endTime=$(date +%s)
