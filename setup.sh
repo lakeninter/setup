@@ -27,10 +27,11 @@ function greetFunc() {
 }
 greetFunc
 
+defaultIP=$(hostname -I | awk '{print $1}')
 #########################################
 # Taking inputs from the user
 #########################################
-read -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" IP
+read -e -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" -i $defaultIP IP
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
 
@@ -227,4 +228,4 @@ export startTime="${startTime}"
 sleep 2
 
 # Source the remote mern.sh script.
-source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern.sh)
+source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern_nginx.sh)
