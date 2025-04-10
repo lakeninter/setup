@@ -80,13 +80,13 @@ EOF
   echo -e "${GREEN}${BOLD}Frontend started on: ${BLUE}${UNDERLINE}http://localhost:5173 \nBackend started on: ${BLUE}${UNDERLINE}http://localhost:5000${NC}"
 }
 
-startTime=$(date +%s)
+starttime=$startTime
 # Calling spinMern fuction
 spinMern
 # Now you can use any variables or functions defined in mern.sh
 echo "MONGO_URL is: $MONGO_URL"
 endTime=$(date +%s)
-runtime=$((endTime - startTime))
+runtime=$((endTime - starttime))
 minutes=$((runtime / 60))
 seconds=$((runtime % 60))
 
