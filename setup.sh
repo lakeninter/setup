@@ -229,6 +229,7 @@ echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seco
 # Export MONGO_URL so the remote script sees it.
 export MONGO_URL="${MONGO_URL}"
 export startTime="${startTime}"
+sleep 2
 
 # Source the remote mern.sh script.
 source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern.sh)
