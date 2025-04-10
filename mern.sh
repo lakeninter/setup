@@ -66,6 +66,8 @@ function spinMern() {
 
   echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
+  echo -e "\nYour StartTime: ${GREEN}${BOLD}${UNDERLINE}${startTime}${NC}\n"
+
   # creating .env.local file
   cat <<EOF > ./works/backend/.env
 MONGO_URL=${MONGO_URL}
