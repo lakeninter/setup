@@ -77,28 +77,31 @@ EOF
   npm i
   cd ../backend/
   npm i
-  
-  # For check previous time exists
-  if [ -n $startTime]; then
-    startingTime=$(date -d @"$startTime" +%s)
-  else 
-    startingTime=$(date +%s)
-  fi
-
-  # Now you can use any variables or functions defined in mern.sh
-  echo "MONGO_URL is: $MONGO_URL"
-  endTime=$(date +%s)
-  runtime=$((endTime - startingTime))
-  minutes=$((runtime / 60))
-  seconds=$((runtime % 60))
-
-  echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seconds} sec${NC}"
-  sleep 1.5
-
   npm run both
 
   echo -e "${GREEN}${BOLD}Frontend started on: ${BLUE}${UNDERLINE}http://localhost:5173 \nBackend started on: ${BLUE}${UNDERLINE}http://localhost:5000${NC}"
 }
+
+#########################################
+# Set starting time based on whether startTime exists
+#########################################
+
+# Corrected the if-statement: added quotes around $startTime and proper spacing before the closing bracket.
+if [ -n "$startTime" ]; then
+  startingTime=$(date -d @"$startTime" +%s)
+else 
+  startingTime=$(date +%s)
+fi
+
+# Now you can use any variables or functions defined in mern.sh
+echo "MONGO_URL is: $MONGO_URL"
+sleep 2
+endTime=$(date +%s)
+runtime=$((endTime - startingTime))
+minutes=$((runtime / 60))
+seconds=$((runtime % 60))
+
+echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seconds} sec${NC}"
 
 # Calling spinMern fuction
 spinMern
