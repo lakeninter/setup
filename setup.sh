@@ -228,6 +228,7 @@ echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seco
 # Spinnig MERN app
 # Export MONGO_URL so the remote script sees it.
 export MONGO_URL="${MONGO_URL}"
+export startTime="${startTime}"
 
 # Source the remote mern.sh script.
 source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern.sh)
