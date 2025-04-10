@@ -31,7 +31,7 @@ greetFunc
 #########################################
 # Taking inputs from the user
 #########################################
-read -p "$(echo -e ${YELLOW}Enter your domain: ${NC})" DOMAIN
+# read -p "$(echo -e ${YELLOW}Enter your domain: ${NC})" DOMAIN
 
 # Getting the default IP
 IP=$(hostname -I | awk '{print $1}')
