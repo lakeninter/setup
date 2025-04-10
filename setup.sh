@@ -34,6 +34,7 @@ defaultIP=$(hostname -I | awk '{print $1}')
 read -e -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" -i $defaultIP IP
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
 read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
+read -p "$(echo -e ${YELLOW}Enter your domain: ${NC})" DOMAIN
 
 # Construct the Mongo Connection String (needed inside the function too)
 MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
@@ -224,6 +225,7 @@ echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seco
 # Spinnig MERN app
 # Export MONGO_URL so the remote script sees it.
 export MONGO_URL="${MONGO_URL}"
+export DOMAIN="${DOMAIN}"
 export startTime="${startTime}"
 sleep 2
 
