@@ -51,6 +51,7 @@ function installPackageIfNotExits() {
         sudo apt-get update -y
         # Use eval to handle commands with pipes and multiple parts.
         eval "$installCMD"
+        sleep 1.5
     else
         # If a target version is specified, compare versions.
         if [ -n "$packageVersion" ]; then
@@ -179,28 +180,22 @@ sleep 1.5
 
 # Check and install curl
 installPackageIfNotExits "curl" "sudo apt-get install -y curl"
-sleep 1.5
 
 # Check and install Node.js v20
 installPackageIfNotExits "nodejs" "curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt install -y nodejs"
-sleep 1.5
 
 # Check and install npm@11
 installPackageIfNotExits "npm" "npm install -g npm@11" "11"
-sleep 1.5
 
 # Check and install pm2
 installPackageIfNotExits "pm2" "npm install -g pm2"
-sleep 1.5
 
 # Check and install ufw
 installPackageIfNotExits "ufw" "sudo apt-get install -y ufw"
-sleep 1.5
 
 # Check and install zip
 installPackageIfNotExits "zip" "sudo apt-get install -y zip"
 sleep 1.5
-
 #########################################
 # Setup MongoDB
 #########################################
