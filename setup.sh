@@ -81,6 +81,8 @@ function mernNginxSetup() {
     read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
     read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
     read -p "$(echo -e ${YELLOW}Enter your domain: ${NC})" DOMAIN
+    read -p "$(echo -e ${YELLOW}Enter your email: ${NC})" EMAIL
+
 
     # Mongo Connection String
     MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
@@ -88,6 +90,7 @@ function mernNginxSetup() {
     # Export MONGO_URL so the remote script sees it.
     export MONGO_URL="${MONGO_URL}"
     export DOMAIN="${DOMAIN}"
+    export EMAIL="${EMAIL}"
     sleep 1
     bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern_nginx.sh)
 }
