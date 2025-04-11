@@ -25,7 +25,7 @@ function greetFunc(){
     echo -e "${BLUE}*                                  *${NC}"
     echo -e "${BLUE}************************************${NC}"
 }
-greetFunc
+# greetFunc
 
 #########################################
 # Function to check and install zip if not installed
