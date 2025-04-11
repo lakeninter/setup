@@ -104,6 +104,8 @@ EOF
         echo -e "${GREEN}MongoDB sample data inserted.${NC}\n"
 
     else
+        echo -e "${YELLOW}${BOLD}MongoDB could not be found, Installing MongoDB...${NC}"
+        sleep 1
         # Step 1: Import MongoDB GPG Key
         curl -fsSL https://pgp.mongodb.com/server-6.0.asc \
         | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
