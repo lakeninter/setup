@@ -27,7 +27,7 @@ function greetFunc() {
 }
 greetFunc
 
-
+# Options to display
 PS3="Please select an option: "
 opt1="Basic MongoDB, Node, NPM, PM2"
 opt2="MERN APP"
