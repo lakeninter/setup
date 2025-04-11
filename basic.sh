@@ -28,7 +28,7 @@ function greetFunc() {
 greetFunc
 
 #########################################
-# Run Basic setup
+# OPTION 1 => Run Basic setup
 #########################################
 function basicSetup() {
     defaultIP=$(hostname -I | awk '{print $1}')
@@ -49,7 +49,7 @@ function basicSetup() {
 }
 
 #########################################
-# Run Basic setup
+# OPTION 2 => Run MERN APP setup
 #########################################
 function mernSetup() {
     defaultIP=$(hostname -I | awk '{print $1}')
@@ -68,6 +68,30 @@ function mernSetup() {
     sleep 1
     bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern.sh)
 }
+
+#########################################
+# OPTION 3 => Run MERN APP + Nginx setup
+#########################################
+function mernNginxSetup() {
+    defaultIP=$(hostname -I | awk '{print $1}')
+    #########################################
+    # Taking inputs from the user
+    #########################################
+    read -e -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" -i $defaultIP IP
+    read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
+    read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
+    read -p "$(echo -e ${YELLOW}Enter your domain: ${NC})" DOMAIN
+
+    # Mongo Connection String
+    MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
+
+    # Export MONGO_URL so the remote script sees it.
+    export MONGO_URL="${MONGO_URL}"
+    export DOMAIN="${DOMAIN}"
+    sleep 1
+    bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern_nginx.sh)
+}
+
 
 
 # Options to display
@@ -100,6 +124,7 @@ select opt in "${options[@]}"; do
         "$opt3")
             echo -e "${YELLOW}Processing... $opt3${NC}"
             sleep 1
+            mernNginxSetup
             break
             ;;
         "$opt4")
