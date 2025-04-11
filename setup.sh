@@ -27,6 +27,27 @@ function greetFunc() {
 }
 greetFunc
 
+#########################################
+# Run Basic setup
+#########################################
+function basicSetup() {
+    defaultIP=$(hostname -I | awk '{print $1}')
+    #########################################
+    # Taking inputs from the user
+    #########################################
+    read -e -p "$(echo -e ${YELLOW}Enter your server IP: ${NC})" -i $defaultIP IP
+    read -p "$(echo -e ${YELLOW}Enter your mongoDB Username: ${NC})" USERNAME
+    read -p "$(echo -e ${YELLOW}Enter your mongoDB Password: ${NC})" PASSWORD
+
+    # Mongo Connection String
+    MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
+
+    # Export MONGO_URL so the remote script sees it.
+    export MONGO_URL="${MONGO_URL}"
+    sleep 1
+    bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+}
+
 # Options to display
 PS3="Please select an option: "
 opt1="Basic MongoDB, Node, NPM, PM2"
@@ -45,6 +66,7 @@ select opt in "${options[@]}"; do
         "$opt1")
             echo -e "${YELLOW}Processing... $opt1${NC}"
             sleep 1
+            basicSetup
             break
             ;;
         "$opt2")
