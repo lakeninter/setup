@@ -65,6 +65,8 @@ function spinMern() {
   # sudo apt-get remove -y zip
   installPackageIfNotExits "zip" "apt-get install -y zip"
   installPackageIfNotExits "nginx" "sudo apt update && sudo apt install -y nginx"
+  installPackageIfNotExits "cerbot" "sudo apt-get update && sudo apt-get install -y certbot python3-certbot-nginx"
+
   # Creating Directory
   mkdir -p ./works
 
@@ -149,9 +151,17 @@ server {
 EOF
 
   sleep 1.5
+  # Obtain or renew the SSL certificate using Certbot (non-interactive mode)
+  sudo certbot --nginx -d "${DOMAIN}" --non-interactive --agree-tos --email "${EMAIL}"
+  sleep 1.5
+
+  echo -e "${GREEN}Nginx SSL setup complete for ${DOMAIN}.${NC}"
+  
+  sleep 1.5
   sudo nginx -t
   sleep 1.5
 
+  # Reload the Nginx configuration so the changes take effect
   sudo systemctl reload nginx
   sleep 1.5
 
@@ -189,4 +199,3 @@ seconds=$((runtime % 60))
 
 echo "MONGO_URL is: $MONGO_URL"
 echo -e "✅ ${GREEN}Total Execution Time: ${YELLOW}${BOLD}${minutes} min ${seconds} sec${NC}"
-
