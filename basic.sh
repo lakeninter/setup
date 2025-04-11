@@ -18,7 +18,7 @@ WHITE='\033[0;37m'
 # Greetings
 #########################################
 function greetFunc() {
-    clear
+    # clear
     echo -e "${BLUE}************************************${NC}"
     echo -e "${BLUE}*                                  *${NC}"
     echo -e "${GREEN}* ${BOLD}Welcome To Crazy Tech Solution🔥 *${NC}"
