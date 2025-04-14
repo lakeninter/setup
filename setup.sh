@@ -45,7 +45,7 @@ function basicSetup() {
     # Export MONGO_URL so the remote script sees it.
     export MONGO_URL="${MONGO_URL}"
     sleep 1
-    source bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
 }
 
 #########################################
@@ -66,9 +66,9 @@ function mernSetup() {
     # Export MONGO_URL so the remote script sees it.
     export MONGO_URL="${MONGO_URL}"
     sleep 1
-    source bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
     sleep 1
-    source bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern.sh)
+    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern.sh)
 }
 
 #########################################
@@ -94,9 +94,9 @@ function mernNginxSetup() {
     export DOMAIN="${DOMAIN}"
     export EMAIL="${EMAIL}"
     sleep 1
-    source bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
     sleep 1
-    source bash <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern_nginx.sh)
+    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern_nginx.sh)
 }
 
 
