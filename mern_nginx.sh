@@ -34,12 +34,12 @@ function greetFunc(){
 # read -p "$(echo -e ${YELLOW}Enter your domain: ${NC})" DOMAIN
 
 # Getting the default IP
-IP=$(hostname -I | awk '{print $1}')
+# IP=$(hostname -I | awk '{print $1}')
 
-result=$(nslookup "$DOMAIN")
-# Display the full nslookup result.
-echo -e "${BLUE}${BOLD}nslookup result for $DOMAIN:${NC}"
-EXPECTED_IP=$(echo "$result" | awk '/^Address: / {print $2}' | tail -n1)
+# result=$(nslookup "$DOMAIN")
+# # Display the full nslookup result.
+# echo -e "${BLUE}${BOLD}nslookup result for $DOMAIN:${NC}"
+# EXPECTED_IP=$(echo "$result" | awk '/^Address: / {print $2}' | tail -n1)
 
 #########################################
 # Function to check and install zip if not installed
