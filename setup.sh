@@ -89,7 +89,9 @@ function mernNginxSetup() {
     IP=$(hostname -I | awk '{print $1}')
 
     result=$(nslookup "$DOMAIN")
-
+    # Display the full nslookup result.
+    echo -e "${BLUE}${BOLD}nslookup result for $DOMAIN:${NC}"
+    EXPECTED_IP=$(echo "$result" | awk '/^Address: / {print $2}' | tail -n1)
     # Compare the actual IP with the expected IP.
     if [ "$IP" == "$EXPECTED_IP" ]; then
         echo -e "${GREEN}Success: The domain $DOMAIN correctly resolves to $EXPECTED_IP.${NC}"
