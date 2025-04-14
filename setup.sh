@@ -85,18 +85,33 @@ function mernNginxSetup() {
     read -p "$(echo -e ${YELLOW}Enter your domain: ${NC})" DOMAIN
     read -p "$(echo -e ${YELLOW}Enter your email: ${NC})" EMAIL
 
+    # Getting the default IP
+    IP=$(hostname -I | awk '{print $1}')
 
-    # Mongo Connection String
-    MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
+    result=$(nslookup "$DOMAIN")
 
-    # Export MONGO_URL so the remote script sees it.
-    export MONGO_URL="${MONGO_URL}"
-    export DOMAIN="${DOMAIN}"
-    export EMAIL="${EMAIL}"
-    sleep 1
-    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
-    sleep 1
-    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern_nginx.sh)
+    # Compare the actual IP with the expected IP.
+    if [ "$IP" == "$EXPECTED_IP" ]; then
+        echo -e "${GREEN}Success: The domain $DOMAIN correctly resolves to $EXPECTED_IP.${NC}"
+        # Mongo Connection String
+        MONGO_URL="mongodb://$USERNAME:$PASSWORD@$IP:27017/?authSource=admin"
+
+        # Export MONGO_URL so the remote script sees it.
+        export MONGO_URL="${MONGO_URL}"
+        export DOMAIN="${DOMAIN}"
+        export EMAIL="${EMAIL}"
+        export EXPECTED_IP="$EXPECTED_IP"
+        export result="$result"
+        export IP="$IP"
+        sleep 1
+        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+        sleep 1
+        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern_nginx.sh)
+        
+    else
+        echo -e "${RED}${BOLD}Mismatch: The domain $DOMAIN is not pointed to $IP${NC}"
+    fi
+
 }
 
 
