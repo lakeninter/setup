@@ -65,7 +65,7 @@ function spinMern() {
   # sudo apt-get remove -y zip
   installPackageIfNotExits "zip" "apt-get install -y zip"
   installPackageIfNotExits "nginx" "sudo apt update && sudo apt install -y nginx"
-  installPackageIfNotExits "cerbot" "sudo apt-get update && sudo apt-get install -y certbot python3-certbot-nginx"
+  installPackageIfNotExits "certbot" "sudo apt-get update && sudo apt-get install -y certbot python3-certbot-nginx"
 
   # Creating Directory
   mkdir -p ./works
