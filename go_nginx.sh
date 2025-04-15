@@ -76,8 +76,10 @@ function spinMern() {
 
   # Unzipping files
   curl -L -o go.zip https://github.com/lakeninter/setup/raw/refs/heads/main/go.zip 
+  sleep 1
 
-  unzip go.zip -d ./works/incomming_go
+  unzip go.zip -d .
+  sleep 1
 
   # clean up
   rm -rf go.zip
@@ -85,13 +87,15 @@ function spinMern() {
   echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
   # creating .env.local file
-  cat <<EOF > ./works/incomming_go/.env
+  cat <<EOF > .env
 MONGO_URL=${MONGO_URL}
 PORT=6370
 EOF
 
   go mod init incomming_go
+  sleep 1
   go mod tidy
+  sleep 1.5
 
   # To update nginx.conf inside nginx directory
   sudo sed -i '/include \/etc\/nginx\/sites-enabled\/\*;/ { /^[[:space:]]*#/! s/^/# / }' /etc/nginx/nginx.conf
@@ -99,37 +103,37 @@ EOF
   sleep 1.5
 
   # To add domain.conf file inside nginx/conf directory
-  cat <<EOF > /etc/nginx/conf.d/$DOMAIN.conf
-server {
-    listen 80;
-    server_name $DOMAIN;  # Change to your domain or IP
+#   cat <<EOF > /etc/nginx/conf.d/$DOMAIN.conf
+# server {
+#     listen 80;
+#     server_name $DOMAIN;  # Change to your domain or IP
 
-    # --- Proxy all other requests to the Vite Dev Server ---
-    location / {
-        proxy_pass http://localhost:7000;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-EOF
+#     # --- Proxy all other requests to the Vite Dev Server ---
+#     location / {
+#         proxy_pass http://localhost:7000;
+#         proxy_http_version 1.1;
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#     }
+# }
+# EOF
 
-  sleep 1.5
-  # Obtain or renew the SSL certificate using Certbot (non-interactive mode)
-  sudo certbot --nginx -d "${DOMAIN}" --non-interactive --agree-tos --email "${EMAIL}"
-  sleep 1.5
+#   sleep 1.5
+#   # Obtain or renew the SSL certificate using Certbot (non-interactive mode)
+#   sudo certbot --nginx -d "${DOMAIN}" --non-interactive --agree-tos --email "${EMAIL}"
+#   sleep 1.5
 
-  echo -e "${GREEN}Nginx SSL setup complete for ${DOMAIN}.${NC}"
+#   echo -e "${GREEN}Nginx SSL setup complete for ${DOMAIN}.${NC}"
   
-  sleep 1.5
-  sudo nginx -t
-  sleep 1.5
+#   sleep 1.5
+#   sudo nginx -t
+#   sleep 1.5
 
-  # Reload the Nginx configuration so the changes take effect
-  sudo systemctl reload nginx
-  sleep 1.5
+#   # Reload the Nginx configuration so the changes take effect
+#   sudo systemctl reload nginx
+#   sleep 1.5
 
   go run main.go
   echo -e "${BLUE}${UNDERLINE}http://$DOMAIN${NC}"
