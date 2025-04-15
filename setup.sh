@@ -168,7 +168,7 @@ opt2="MERN APP"
 opt3="MERN APP + Nginx"
 opt4="GO + Nginx"
 optlast="Quit"
-options=("$opt1" "$opt2" "$opt3" "$opt4")
+options=("$opt1" "$opt2" "$opt3" "$opt4" "$optlast")
 
 select opt in "${options[@]}"; do
     if [ -z "$opt" ]; then
