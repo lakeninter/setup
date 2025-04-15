@@ -72,37 +72,26 @@ function spinMern() {
   mkdir -p ./works
   cd works
   mkdir -p ./incomming_go
-#   cd incomming_go
-  
-#   go mod init incomming_go
-#   go mod tidy
-
-
+  cd incomming_go
 
   # Unzipping files
-#   curl -L -o react-vite.zip https://github.com/lakeninter/setup/raw/refs/heads/main/react-vite-tailwind.zip 
+  curl -L -o go.zip https://github.com/lakeninter/setup/raw/refs/heads/main/go.zip 
 
-#   curl -L -o express-node.zip https://github.com/lakeninter/setup/raw/refs/heads/main/node-express.zip
-
-#   unzip react-vite.zip -d ./works/frontend
-
-#   unzip express-node.zip -d ./works/backend
+  unzip go.zip -d ./works/incomming_go
 
   # clean up
-#   rm -rf react-vite.zip express-node.zip
+  rm -rf go.zip
 
   echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
   # creating .env.local file
-#   cat <<EOF > ./works/backend/.env
-# MONGO_URL=${MONGO_URL}
-# EOF
+  cat <<EOF > ./works/incomming_go/.env
+MONGO_URL=${MONGO_URL}
+PORT=6370
+EOF
 
-#   cd works/frontend/
-#   npm i
-
-#   cd ../backend/
-#   npm i
+  go mod init incomming_go
+  go mod tidy
 
   # To update nginx.conf inside nginx directory
   sudo sed -i '/include \/etc\/nginx\/sites-enabled\/\*;/ { /^[[:space:]]*#/! s/^/# / }' /etc/nginx/nginx.conf
@@ -119,10 +108,7 @@ server {
     location / {
         proxy_pass http://localhost:7000;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_cache_bypass \$http_upgrade;
+        proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
@@ -145,8 +131,8 @@ EOF
   sudo systemctl reload nginx
   sleep 1.5
 
-#   go run main.go
-#   echo -e "${GREEN}${BOLD}Frontend started on: ${BLUE}${UNDERLINE}http://localhost:5173\n${BLUE}${UNDERLINE}http://$DOMAIN\nBackend started on: ${BLUE}${UNDERLINE}http://localhost:5000${NC}"
+  go run main.go
+  echo -e "${BLUE}${UNDERLINE}http://$DOMAIN${NC}"
 
 #   npm run both
 }
