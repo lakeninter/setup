@@ -134,10 +134,14 @@ EOF
   # Reload the Nginx configuration so the changes take effect
   sudo systemctl reload nginx
   sleep 1.5
+  echo -e "${BLUE}Firewall rule updated${NC}"
+  sudo ufw allow 'Nginx Full'
+  sleep 1.5
 
   go build -o incomming_go main.go
+  sleep 2
   pm2 start ./incomming_go --name "main.go"
-
+  sleep 1.5
   echo -e "${BLUE}${UNDERLINE}https://$DOMAIN${NC}"
 
 #   npm run both
