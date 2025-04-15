@@ -89,7 +89,7 @@ function spinGo() {
   # creating .env.local file
   cat <<EOF > .env
 MONGO_URL=${MONGO_URL}
-PORT=6370
+PORT=7000
 EOF
 
   go mod init incomming_go
