@@ -109,7 +109,7 @@ EOF
   cd ..
   # Updation in mongo-csv-export
   sed -i "s|const uri = 'YOUR CONNECTION STRING';|const uri = '$MONGO_URL';|g" /root/works/mongo-csv-export/server.js
-  sed -i "s|const API_BASE_URL = 'YOUR API BASE URL';|const API_BASE_URL = 'http://$IP:4000';|g" /root/works/mongo-csv-export/index.html
+  sed -i "s|const API_BASE_URL = 'YOUR API BASE URL';|const API_BASE_URL = 'http://$IP:3000';|g" /root/works/mongo-csv-export/index.html
 
 
   # To update nginx.conf inside nginx directory
@@ -125,7 +125,7 @@ server {
 
     # --- Proxy all other requests to the Vite Dev Server ---
     location /mongo-csv-export {
-        proxy_pass http://127.0.0.1:4000;
+        proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
