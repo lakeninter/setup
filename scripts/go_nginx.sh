@@ -91,7 +91,7 @@ function spinGo() {
   echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
   # creating .env.local file
-  cat <<EOF > ./works/incomming_go/.env
+  cat <<EOF > ./incomming_go/.env
 MONGO_URL=${MONGO_URL}
 PORT=7000
 EOF
@@ -122,6 +122,16 @@ EOF
 server {
     listen 80;
     server_name $DOMAIN;  # Change to your domain or IP
+
+    # --- Proxy all other requests to the Vite Dev Server ---
+    location /mongo-csv-export {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
 
     # --- Proxy all other requests to the Vite Dev Server ---
     location / {
