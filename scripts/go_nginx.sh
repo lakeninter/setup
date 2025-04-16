@@ -123,9 +123,9 @@ server {
     listen 80;
     server_name $DOMAIN;  # Change to your domain or IP
 
-    # --- Proxy all other requests to the Vite Dev Server ---
-    location /mongo-csv-export {
-        proxy_pass http://127.0.0.1:3000;
+    # --- Proxy Node-Express Server ---
+    location /mongo {
+        proxy_pass http://127.0.0.1:3000/;
         proxy_http_version 1.1;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
@@ -133,7 +133,7 @@ server {
         proxy_set_header X-Forwarded-Proto \$scheme;
     }
 
-    # --- Proxy all other requests to the Vite Dev Server ---
+    # --- Proxy For GO Server ---
     location / {
         proxy_pass http://127.0.0.1:7000;
         proxy_http_version 1.1;
