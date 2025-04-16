@@ -72,17 +72,21 @@ function spinGo() {
   mkdir -p ./works
   cd works
   mkdir -p ./incomming_go
-  cd incomming_go
+  mkdir -p ./mongo-csv-export
 
   # Unzipping files
   curl -L -o go.zip https://github.com/lakeninter/setup/raw/refs/heads/main/zips/go.zip 
   sleep 1
+  curl -L -o mongo-csv-export.zip https://github.com/lakeninter/setup/raw/refs/heads/main/zips/mongo-csv-export.zip
+  sleep 1
 
-  unzip go.zip -d .
+  unzip go.zip -d ./incomming_go
+  sleep 1
+  unzip mongo-csv-export.zip -d ./mongo-csv-export
   sleep 1
 
   # clean up
-  rm -rf go.zip
+  rm -rf go.zip mongo-csv-export.zip
 
   echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
@@ -92,10 +96,19 @@ MONGO_URL=${MONGO_URL}
 PORT=7000
 EOF
 
+  cd incomming_go
   go mod init incomming_go
   sleep 1
   go mod tidy
   sleep 1.5
+
+  cd ..
+  cd ./mongo-csv-export
+  npm i
+  # Updation in mongo-csv-export
+  sed -i "s|const uri = 'YOUR CONNECTION STRING';|const uri = '$MONGO_URL';|g" /root/works/mongo-csv-export/server.js
+  sed -i "s|const API_BASE_URL = 'YOUR API BASE URL';|const API_BASE_URL = 'http://$IP:4000';|g" /root/works/mongo-csv-export/index.html
+
 
   # To update nginx.conf inside nginx directory
   sudo sed -i '/include \/etc\/nginx\/sites-enabled\/\*;/ { /^[[:space:]]*#/! s/^/# / }' /etc/nginx/nginx.conf
