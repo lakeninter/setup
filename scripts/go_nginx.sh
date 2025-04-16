@@ -163,10 +163,11 @@ EOF
   sudo ufw allow 'Nginx Full'
   sleep 1.5
 
+  cd ./incomming_go
   go build -o incomming_go main.go
   sleep 2
   pm2 start ./incomming_go --name "main.go"
-
+  cd ..
   # pm2 node ./mongo-csv-export --name "main.go"
   sleep 1.5
   echo -e "${BLUE}${UNDERLINE}https://$DOMAIN${NC}"
