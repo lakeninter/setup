@@ -71,9 +71,9 @@ function spinMern() {
   mkdir -p ./works
 
   # Unzipping files
-  curl -L -o react-vite.zip https://github.com/lakeninter/setup/raw/refs/heads/main/react-vite-tailwind.zip 
+  curl -L -o react-vite.zip https://github.com/lakeninter/setup/raw/refs/heads/main/zips/react-vite-tailwind.zip 
 
-  curl -L -o express-node.zip https://github.com/lakeninter/setup/raw/refs/heads/main/node-express.zip
+  curl -L -o express-node.zip https://github.com/lakeninter/setup/raw/refs/heads/main/zips/node-express.zip
 
   unzip react-vite.zip -d ./works/frontend
 

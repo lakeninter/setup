@@ -45,7 +45,7 @@ function basicSetup() {
     # Export MONGO_URL so the remote script sees it.
     export MONGO_URL="${MONGO_URL}"
     sleep 1
-    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/scripts/basic.sh)
 }
 
 #########################################
@@ -66,9 +66,9 @@ function mernSetup() {
     # Export MONGO_URL so the remote script sees it.
     export MONGO_URL="${MONGO_URL}"
     sleep 1
-    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/scripts/basic.sh)
     sleep 1
-    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern.sh)
+    source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/scripts/mern.sh)
 }
 
 #########################################
@@ -106,9 +106,9 @@ function mernNginxSetup() {
         export result="$result"
         export IP="$IP"
         sleep 1
-        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/scripts/basic.sh)
         sleep 1
-        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/mern_nginx.sh)
+        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/scripts/mern_nginx.sh)
         
     else
         echo -e "${RED}${BOLD}Mismatch: The domain $DOMAIN is not pointed to $IP${NC}"
@@ -151,9 +151,9 @@ function goNginxSetup() {
         export result="$result"
         export IP="$IP"
         sleep 1
-        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/basic.sh)
+        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/scripts/basic.sh)
         sleep 1
-        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/go_nginx.sh)
+        source <(curl -s https://raw.githubusercontent.com/lakeninter/setup/refs/heads/main/scripts/go_nginx.sh)
         
     else
         echo -e "${RED}${BOLD}Mismatch: The domain $DOMAIN is not pointed to $IP${NC}"

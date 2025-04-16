@@ -75,7 +75,7 @@ function spinGo() {
   cd incomming_go
 
   # Unzipping files
-  curl -L -o go.zip https://github.com/lakeninter/setup/raw/refs/heads/main/go.zip 
+  curl -L -o go.zip https://github.com/lakeninter/setup/raw/refs/heads/main/zips/go.zip 
   sleep 1
 
   unzip go.zip -d .
