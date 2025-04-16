@@ -166,9 +166,12 @@ EOF
   cd ./incomming_go
   go build -o incomming_go main.go
   sleep 2
-  pm2 start ./incomming_go --name "main.go"
+  pm2 startup
+  pm2 save
+  # pm2 start ./incomming_go --name "main.go"
   cd ..
-  # pm2 node ./mongo-csv-export --name "main.go"
+
+  # pm2 start ./mongo-csv-export --name "server.js"
   sleep 1.5
   echo -e "${BLUE}${UNDERLINE}https://$DOMAIN${NC}"
 
