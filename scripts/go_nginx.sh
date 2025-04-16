@@ -91,7 +91,7 @@ function spinGo() {
   echo -e "\nYour MONGO_URL: ${GREEN}${BOLD}${UNDERLINE}${MONGO_URL}${NC}\n"
 
   # creating .env.local file
-  cat <<EOF > .env
+  cat <<EOF > ./works/incomming_go/.env
 MONGO_URL=${MONGO_URL}
 PORT=7000
 EOF
@@ -105,6 +105,8 @@ EOF
   cd ..
   cd ./mongo-csv-export
   npm i
+  sleep 1
+  cd ..
   # Updation in mongo-csv-export
   sed -i "s|const uri = 'YOUR CONNECTION STRING';|const uri = '$MONGO_URL';|g" /root/works/mongo-csv-export/server.js
   sed -i "s|const API_BASE_URL = 'YOUR API BASE URL';|const API_BASE_URL = 'http://$IP:4000';|g" /root/works/mongo-csv-export/index.html
@@ -154,6 +156,8 @@ EOF
   go build -o incomming_go main.go
   sleep 2
   pm2 start ./incomming_go --name "main.go"
+
+  # pm2 node ./mongo-csv-export --name "main.go"
   sleep 1.5
   echo -e "${BLUE}${UNDERLINE}https://$DOMAIN${NC}"
 
