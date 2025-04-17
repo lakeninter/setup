@@ -166,9 +166,12 @@ EOF
   cd ./incomming_go
   go build -o incomming_go main.go
   sleep 2
+  pm2 start ./incomming_go --name "main.go"
+  sleep 2
   pm2 startup
+  sleep 1
   pm2 save
-  # pm2 start ./incomming_go --name "main.go"
+  sleep 1
   cd ..
 
   # pm2 start ./mongo-csv-export --name "server.js"
